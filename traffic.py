@@ -8,11 +8,22 @@ from flask import request
 from gpiozero import LED
 from time import sleep
 
+#################################################
+# Define the FLask main loop.
+#################################################
 app       = Flask(__name__)
+
+#################################################
+# Define the PGIO pins connected to the lights.
+#################################################
 redLED    = LED(16)
 yellowLED = LED(20)
 greenLED  = LED(21)
 
+#################################################
+# Open the serial port with the correct settings
+# to communicate to the Betabrite marquee.
+#################################################
 try:
 	ser = serial.Serial(
         	port     = '/dev/ttyUSB0',
@@ -25,21 +36,31 @@ try:
 except:
 	print('Cannot open USB port.', file=sys.stderr)	
 
+################################################
+# Define the various colors support by the sign.
+# Each color is preceeded by the control code
+# needed to set the color.
+################################################
 colors = {
-'red'       : '\x31',
-'green'     : '\x32',
-'amber'     : '\x33',
-'dim red'   : '\x34',
-'dim green' : '\x35',
-'brown'     : '\x36',
-'orange'    : '\x37',
-'yellow'    : '\x38',
-'rainbow'   : '\x39',
-'rainbow 2' : '\x41',
-'mixed'     : '\x42',
-'auto'      : '\x43'
+'red'       : '\x1c\x31',
+'green'     : '\x1c\x32',
+'amber'     : '\x1c\x33',
+'dim red'   : '\x1c\x34',
+'dim green' : '\x1c\x35',
+'brown'     : '\x1c\x36',
+'orange'    : '\x1c\x37',
+'yellow'    : '\x1c\x38',
+'rainbow'   : '\x1c\x39',
+'rainbow 2' : '\x1c\x41',
+'mixed'     : '\x1c\x42',
+'auto'      : '\x1c\x43'
 }
 
+################################################
+# Define the various tet display modes. This 
+# controls hold the text is displayted on the 
+# sign.
+################################################
 modes = {
 'rotate'     : '\x61',
 'hold'       : '\x62',
@@ -49,45 +70,83 @@ modes = {
 'compressed' : '\x74'
 }
 
-
+################################################
+# Setup the default route.
+################################################
 @app.route('/')
 def index():
     return 'Welcome to the traffic light API end point.'
 
+###############################################
+# This is the 'control' route, where the heavy
+# lifting is done.
+###############################################
 @app.route('/control')
 def control():
+
+	####################################################
+	# Process all the command parameters from the URL.
+	####################################################
 	signals = request.args.get('signals', '')
 
 	message = request.args.get('message', '')
-	mode = request.args.get('mode','rotate')
-	color = request.args.get('color', 'rainbow')
+	mode    = request.args.get('mode','rotate')
+	color   = request.args.get('color', 'rainbow')
 
-	data = '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x5a\x30\x30\x02\x41\x41\x1b\x30\x61'+'\x1b\x20'+modes[mode]+'\x1c'+colors[color]+message+'\x04'
-	bytes_written = ser.write(data.encode('utf-8'))
+	print( 'signals: ', signals, file=sys.stderr)
+	print( 'message: ', message, file=sys.stderr)
+	print( 'mode:    ', mode,    file=sys.stderr)
+	print( 'color:   ', color,   file=sys.stderr)
 
+	####################################################
+	# Setup the command sequence to send to the sign.
+	####################################################
+	data = '\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x5a\x30\x30\x02\x41\x41\x1b\x30\x61'+'\x1b\x20'+modes[mode]+colors[color]+message+'\x04'
 
-	for c in signals:
-		if c == 'R':
-			redLED.on()
-		elif c == 'r':            
-			redLED.off()
-		elif c == 'Y':
-			yellowLED.on()
-		elif c == 'y':
-			yellowLED.off()
-		elif c == 'G':
-			greenLED.on()
-		elif c == 'g':
-			greenLED.off()
-		elif c == ',':
-			sleep(.1)
-		elif c == '.':
-			sleep(.25)
-		elif c == '-':
-			sleep(.5)
+	####################################################
+	# If the 'message' is not blank, write the message 
+	# commnd sequence to the marquee.
+	####################################################	
+	if message != "":
+		bytes_written = ser.write(data.encode('utf-8'))
+		print( 'Message displayed.', file=sys.stderr)
 
+	####################################################
+	# If the 'signals' is not blank, send the signals to
+	# the trafficlight GPIOs that control the relays.
+	####################################################
+	if signals != "":
+		for c in signals:
+			if c == 'R':
+				redLED.on()
+			elif c == 'r':            
+				redLED.off()
+			elif c == 'Y':
+				yellowLED.on()
+			elif c == 'y':
+				yellowLED.off()
+			elif c == 'G':
+				greenLED.on()
+			elif c == 'g':
+				greenLED.off()
+			elif c == ',':
+				sleep(.1)
+			elif c == '.':
+				sleep(.25)
+			elif c == '-':
+				sleep(.5)
+
+		print( 'Signal received and sent to trafficlight.', file=sys.stderr)
+
+	####################################################
+	# Print out a replay to indicate what we just did.
+	####################################################
 	return 'recieved signals:  '+ signals + ' and message: ' + message;
 
+#################################################################
+# Start the main processing loop on port 80 in 'threaded' mode.
+# This will ensure that each request is handled in its own thread.
+#################################################################
 if __name__ == '__main__':
     app.run(threaded=True, debug=True, host='0.0.0.0', port=80)
     
