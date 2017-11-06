@@ -108,10 +108,14 @@ def control():
 	mode    = request.args.get('mode','rotate')
 	color   = request.args.get('color', 'rainbow')
 
-	print( 'signals: ', signals, file=sys.stderr)
-	print( 'message: ', message, file=sys.stderr)
-	print( 'mode:    ', mode,    file=sys.stderr)
-	print( 'color:   ', color,   file=sys.stderr)
+	if signals != "":
+		print( 'signals: ', signals, file=sys.stderr)
+	if message != "":
+		print( 'message: ', message, file=sys.stderr)
+	if mode != "":
+		print( 'mode:    ', mode,    file=sys.stderr)
+	if color != "":	
+		print( 'color:   ', color,   file=sys.stderr)
 
 	####################################################
 	# Setup the command sequence to send to the sign.
@@ -132,17 +136,17 @@ def control():
 	####################################################
 	if signals != "":
 		for c in signals:
-			if c == 'R':
+			if c == 'r':
 				redLED.on()
-			elif c == 'r':            
+			elif c == 'R':            
 				redLED.off()
-			elif c == 'Y':
-				yellowLED.on()
 			elif c == 'y':
+				yellowLED.on()
+			elif c == 'Y':
 				yellowLED.off()
-			elif c == 'G':
-				greenLED.on()
 			elif c == 'g':
+				greenLED.on()
+			elif c == 'G':
 				greenLED.off()
 			elif c == ',':
 				sleep(.1)
