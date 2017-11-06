@@ -5,6 +5,7 @@ import binascii
 
 from flask import Flask
 from flask import request
+from flask import render_template
 from gpiozero import LED
 from time import sleep
 
@@ -75,7 +76,21 @@ modes = {
 ################################################
 @app.route('/')
 def index():
-    return 'Welcome to the traffic light API end point.'
+    return render_template('index.html');
+
+################################################
+# user input
+################################################
+@app.route('/controlpanel')
+def controlpanel():
+        return render_template('control.html');
+
+################################################
+# help
+################################################
+@app.route('/help')
+def help():
+        return render_template('help.html');
 
 ###############################################
 # This is the 'control' route, where the heavy
@@ -141,7 +156,7 @@ def control():
 	####################################################
 	# Print out a replay to indicate what we just did.
 	####################################################
-	return 'recieved signals:  '+ signals + ' and message: ' + message;
+	return render_template('control.html');
 
 #################################################################
 # Start the main processing loop on port 80 in 'threaded' mode.

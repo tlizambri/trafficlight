@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Help Page">
+    <meta name="author" content="Todd Lizambri">
+
+    <title>TrafficLight</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+ <div id="header">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+	<div class="navbar-header">
+	  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+	    <span class="sr-only">Toggle navigation</span>
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	    <span class="icon-bar"></span>
+	  </button>
+	  <h:panelGroup>
+	    <a class="navbar-brand" href="/">TrafficLight</a>
+	  </h:panelGroup>
+	</div>
+
+	<div class="collapse navbar-collapse">
+	  <ul class="nav navbar-nav navbar-right">
+	    <li id="homeNavItem"><a href="/">Home</a></li>
+	    <li id="controlNavItem"><a href="/controlpanel">Control</a></li>
+	    <li id="HelpNavItem"><a href="/help">Help</a></li>
+	  </ul>
+	</div>
+      </div>
+     </nav>
+ </div>
+
+ <div id="body" class="container main">
+
+   <br/><br/><br/>
+   <h1>Control Panel</h1>   
+   <form class="form" action="/control" method="get" role="form">
+     <div class="row">
+       <div class="form-group col-lg-4">
+	  <label for="colorSelector">Marquee Text Color</label>
+	  <select name="color" class="form-control" id="colorSelector">
+	    <option>red</option>
+	    <option>green</option>
+	    <option>amber</option>
+	    <option>dim red</option>
+	    <option>dim green</option>
+	    <option>brown</option>
+	    <option>orange</option>
+	    <option>rainbow</option>
+	    <option>rainbow 2</option>
+	    <option>mixed</option>
+	    <option>auto</option>
+	  </select>
+       </div>
+     </div>
+     <div class="row">
+	<div class="form-group col-lg-4">
+	  <label for="modeSelector">Marquee Text Display Mode</label>
+	  <select name="mode" class="form-control" id="modeSelector">
+	    <option>rotate</option>
+	    <option>hold</option>
+	    <option>flash</option>
+	    <option>scroll</option>
+	    <option>auto</option>
+	    <option>compressed</option>
+	  </select>
+	</div>
+     </div>
+     <div class="row">
+       <div class="form-group col-lg-4">
+	  <label for="messageText">Marque Message</label>
+	  <textarea name="message" class="form-control" id="messageText" rows="1"></textarea>
+	</div>
+     </div>
+     <div class="row">
+       <div class="form-group col-lg-4">
+	  <label for="signalText">Trafficlight Signal Command Sequence</label>
+	  <textarea name="signals" class="form-control" id="signalText" rows="1"></textarea>
+	</div>
+     </div>
+     <button type="submit" class="btn btn-primary">Send Commands</button>
+   </form>
+	          
+</div>
+
+        <!-- Bootstrap core JavaScript
+	     ================================================== -->
+	<!-- Placed at the end of the document so the pages load faster -->
+  <script src="static/js/jquery-3.2.1.min.js"></script>
+  <script src="static/js/popper.min.js"></script>
+  <script src="static/js/bootstrap.min.js"></script>
+  </body>
+</html>
+
