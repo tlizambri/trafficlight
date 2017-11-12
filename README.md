@@ -5,7 +5,7 @@ Web based traffic light controller
 The API to control the trafficlight is quite simple….
  
 Open a browser (inside our network) and send a URL that looks like this….
-http://<hostname>/control?signals=gYR...GyR...GYr...RGY
+http://hostname/control?signals=gYR...GyR...GYr...RGY
  
 The letters and ‘,’ or ‘.’  do the following….
 R = turns red off
@@ -18,7 +18,7 @@ The example above will sequence through green, yellow, red (1.5 seconds apart) a
 I hope we can find creative ways to integrate this into our software build cycle, sales alert, alexa, or other clever idea!
  
 Hello would be the following in morse code…
-http://<hostname>/control?signals=RYG.r...R,r...R,r...R,r...R...y...Y...g...G,g,,,G,g...G,g...G,r...R,r,,,R,r...R,r...R,y,,,Y,y,,,Y,y,Y
+http://hostname/control?signals=RYG.r...R,r...R,r...R,r...R...y...Y...g...G,g,,,G,g...G,g...G,r...R,r,,,R,r...R,r...R,y,,,Y,y,,,Y,y,Y
  
 Version 2.0 of the trafficlight now supports additional URL parameters to control the attached marquee. The Marquee is manufactured by BetaBrite and comes with a remote to program the marquee and with customer windows software. However, in the spirit of innovation, we have hacked the BetaBrite sign and are using the raspberry pi to stream serial messages to the sign.  These commands will ride along the same request to the trafficlight to control them both.
  
@@ -57,5 +57,5 @@ scroll - words scroll up from the bottom
 auto - a crazy combination of display types (this one is interesting)
 compressed - compressed letters streaming in from the right.
 
-http://<hostname>/control?signals=gYR...GyR...GYr...RGY&message=Go Team!!!.&color=rainbow&mode=compressed
+http://hostname/control?signals=gYR...GyR...GYr...RGY&message=Go Team!!!.&color=rainbow&mode=compressed
 
