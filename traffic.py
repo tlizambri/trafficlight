@@ -111,6 +111,11 @@ def control():
 	if signals != "":
 		print( 'signals: ', signals, file=sys.stderr)
 	if message != "":
+		currentDateTime = time.strftime("%m/%d %H:%M", time.localtime())
+		message = message.replace('{time}'    , currentDateTime)
+		message = message.replace('%7Btime%7D', currentDateTime)
+		message = message.replace('%7btime%7d', currentDateTime)
+		print( 'time: '   , currentDateTime, file=sys.stderr)
 		print( 'message: ', message, file=sys.stderr)
 	if mode != "":
 		print( 'mode:    ', mode,    file=sys.stderr)
@@ -126,7 +131,7 @@ def control():
 	# If the 'message' is not blank, write the message 
 	# commnd sequence to the marquee.
 	####################################################	
-	if message != "":
+	if message != "":                
 		bytes_written = ser.write(data.encode('utf-8'))
 		print( 'Message displayed.', file=sys.stderr)
 
